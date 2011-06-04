@@ -242,6 +242,19 @@ task :link_vimrc do
   end
 end
 
+desc "link colors to ~/.vim/colors"
+task :link_colors do
+  dest = File.expand_path("~/.vim/colors")
+  unless FILE.exist?(dest)
+    ln_s(File.expand_path("../colors", __FILE__), dest)
+  end
+end
+
+desc "Import .gvimrc.local"
+task :gvimrc_local do
+  sh "curl https://gist.github.com/raw/1007639/fd49f76d539ce3ed92c4a7530dd27e2835a9c2f3/gvimrc.local > ~/.gvimrc.local"
+end
+
 task :clean do
   system "git clean -dfx"
 end
@@ -253,7 +266,9 @@ end
 
 task :default => [
   :update_docs,
-  :link_vimrc
+  :link_vimrc,
+  :link_colors,
+  :gvimrc_local
 ]
 
 desc "Clear out all build artifacts and rebuild the latest Janus"
